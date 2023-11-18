@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Code Display</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+label {
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+input {
+    padding: 8px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px;
+    font-size: 18px;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+#weather-result {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+    </style>
+</head>
+<body>
+
+    <h1>Weather App</h1>
+
+    <label for="city">Enter City:</label>
+    <input type="text" id="city" name="city" placeholder="City">
+
+    <button onclick="getWeather()">Get Weather</button>
+
+    <h2>Current Time: <span id="current-time"></span></h2>
+    <p id="weather-result"></p>
+
+    <script>
+        function getWeather() {
+            var city = document.getElementById('city').value;
+
+            fetch('/run_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'city': city }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('current-time').innerText = data.current_time;
+                document.getElementById('weather-result').innerText = `
+                    Condition: ${data.condition}
+                    Description: ${data.description}
+                    Temperature: ${data.temp}°C
+                    Pressure: ${data.pressure} hPa
+                    Humidity: ${data.humidity}%
+                    Wind Speed: ${data.wind} m/s
+                `;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+
+</body>
+</html>
